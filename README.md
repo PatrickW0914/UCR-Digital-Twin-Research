@@ -278,23 +278,6 @@ Long-term:
 
 ---
 
-## Out of scope
-
-The following are deliberately not modeled. Listed here so
-expectations are calibrated:
-
-- **Protection coordination** — no fuses, breakers, or switches.
-  This is a power-flow model, not a relay-settings study.
-- **MV cable impedances** — idealized as zero. The Buildings library's
-  automatic cable mode doesn't support 12 kV class. Voltage drop and
-  losses on the MV side are therefore not captured.
-- **Economic / financial analysis** — no capital costs, no tariffs, no
-  ROI. The model answers feasibility questions, not investment-decision
-  questions.
-- **Sub-monthly load shape** — input data is monthly resolution per
-  building. Daily and hourly load shape inside a month is not captured.
-
----
 
 ## License & attribution
 
