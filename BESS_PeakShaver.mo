@@ -2,16 +2,15 @@ within ThreeAModel;
 
 block BESS_PeakShaver
   "Battery storage with peak-shaving control on T3 transformer % loading"
-  // ------------------------------------------------------------
+
   // Adapted from the Feeder 3B BESS block: same SoC integrator and
   // efficiency model, but the controller watches T3 transformer
   // loading % instead of raw load. Discharges when T3 nears its
   // rating, charges when there's headroom.
-  //
   // Sign convention: P_bess > 0 = discharging (supplying load)
   //                  P_bess < 0 = charging (drawing load)
-  // ------------------------------------------------------------
-  parameter Real capacity_kWh = 1000
+
+parameter Real capacity_kWh = 1000
     "Storage energy capacity (kWh)";
   parameter Real P_max_kW = 250
     "Max charge / discharge rate (kW)";
@@ -46,8 +45,8 @@ equation
            else
              0;
 
-  // SoC dynamics. Discharging (P_bess>0) drains the battery; charging fills it.
-  // Efficiency penalty applied symmetrically (round-trip approximation).
+  // Discharging (P_bess>0) drains the battery and charging fills it.
+  // Efficiency penalty applied symmetrically.
   // capacity_kWh * 3.6e6 converts kWh -> J so der(soc) is 1/s.
   der(soc) = -P_bess * efficiency / (capacity_kWh * 3.6e6);
 
