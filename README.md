@@ -129,9 +129,9 @@ for HSS_3B.
 | Metric | Feeder 3A | Feeder 3B |
 |---|---|---|
 | Substation rating | 18 MVA (T3) | 18 MVA OA (T4) |
-| S0 baseline T3/T4 peak | ~22% | ~(see your simulation results) |
-| S1 (+Phase-1 HP) | ~28% | N/A — heat pump on 3A only |
-| S3 (+PV +BESS) | 27–31% (osc.) | (see your simulation results) |
+| S0 baseline T3/T4 peak | ~22% | ~12% |
+| S1 (+Phase-1 HP) | ~28% | N/A |
+| S3 (+PV +BESS) | 27–31% (osc.) | 12-14% |
 | Total PV deployed in S3 | 2.75 MW across 3 buildings | 3.0 MW across 5 buildings |
 | BESS in S3 | 1 MWh / 500 kW at HUB-B | 1 MWh / 500 kW at HSS_3B |
 
