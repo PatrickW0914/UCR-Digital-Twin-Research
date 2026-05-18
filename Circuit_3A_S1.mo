@@ -4,9 +4,7 @@ model Circuit_3A_S1
   "Feeder 3A scenario S1: Phase-1 heat pump chiller added at CUP/Steam Plant (V1 4.16 kV branch)"
   extends Circuit_3A;
 
-  // ============================================================
   // S1 scenario parameters: Phase-1 heat pump chiller at CUP/Steam Plant
-  // ------------------------------------------------------------
   // Per UCR decarb plan: phased electrification of central plant.
   // Phase-1 = first heat recovery chiller (HRC), sized at 25% of full
   // central plant heat-pump conversion. Full conversion peak electrical
@@ -16,9 +14,8 @@ model Circuit_3A_S1
   //   P_new(t) = P_base(t) + dP_HP_Phase1(t)
   //   dP_HP_Phase1 = frac_Phase1 * P_HP_full
   //
-  // Modeled as constant electrical demand for the first run (medium Phase-1
-  // assumption). Replace with CombiTimeTable later for hourly HRC dispatch.
-  // ============================================================
+
+
   parameter Modelica.Units.SI.Power P_HP_full = 4000e3
     "Full central-plant heat-pump electrical capacity at peak (W)";
   parameter Real frac_Phase1 = 0.25
@@ -26,11 +23,10 @@ model Circuit_3A_S1
   parameter Modelica.Units.SI.Power P_HP_Phase1 = frac_Phase1 * P_HP_full
     "Phase-1 incremental electrical demand at CUP (W)";
 
-  // ============================================================
   // New load: Phase-1 HRC, parallel to l_OlmsteadSteam on the
   // 4.16 kV secondary of x_V1_4160. Same branch transformer (3500 kVA)
   // serves both, so no new MV protection / no topology change required.
-  // ============================================================
+  
   Buildings.Electrical.AC.ThreePhasesBalanced.Loads.Inductive l_HP_Phase1(
     pf = PF,
     mode = Buildings.Electrical.Types.Load.FixedZ_steady_state,
@@ -38,9 +34,7 @@ model Circuit_3A_S1
     V_nominal = V_4160) "Phase-1 heat pump chiller (CUP)" annotation(
     Placement(transformation(origin = {18, -76}, extent = {{-38, -278}, {-22, -262}})));
 
-  // ============================================================
   // S1-specific outputs
-  // ============================================================
   Modelica.Blocks.Continuous.Integrator E_HP(k = 1/3.6e6)
     "Phase-1 heat pump cumulative kWh" annotation(
     Placement(transformation(origin = {-6, 72}, extent = {{222, 82}, {238, 98}})));
@@ -62,16 +56,16 @@ model Circuit_3A_S1
               iconTransformation(extent = {{272, -263}, {288, -247}})));
 
 equation
-  // ---- Connect Phase-1 HRC to the 4.16 kV branch (alongside Olmstead/Steam) ----
+  //  Connect Phase-1 HRC to the 4.16 kV branch
   connect(x_V1_4160.terminal_p, l_HP_Phase1.terminal) annotation(
     Line(points = {{-76, -326}, {-20, -346}}, color = {0, 120, 0}, thickness = 0.5));
 
-  // ---- HRC diagnostics ----
+  //  HRC diagnostics 
   P_HP_kW = -l_HP_Phase1.P/1000;
   E_HP.u  = -l_HP_Phase1.P;
   E_HP_kWh = E_HP.y;
 
-  // ---- S1 aggregate metrics (override scope of base model loading metric) ----
+  //  S1 aggregate metrics (override scope of base model loading metric) 
   Loading_T3_S1_pct = 100 * sqrt((P_total_kW)^2 + (Q_total_kvar)^2) / 18000;
   Loading_V1branch_pct = 100 * sqrt((-l_OlmsteadSteam.P - l_HP_Phase1.P)^2 *
                           (1 + QoverP^2)) / (3500e3);
