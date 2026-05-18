@@ -2,9 +2,7 @@ within ThreeAModel;
 
 model Circuit_3B "UCR Feeder 3B - parallel feeder to 3A, served by T4 substation"
   extends Modelica.Icons.Example;
-  // ============================================================
   // Parameters
-  // ============================================================
   parameter Modelica.Units.SI.Frequency f = 60 "System frequency";
   parameter Modelica.Units.SI.Voltage V_MV = 12500 "Feeder line-to-line voltage (T4 secondary 12.5 kV)";
   parameter Modelica.Units.SI.Voltage V_480 = 480 "LV system 480/277 V";
@@ -19,18 +17,16 @@ model Circuit_3B "UCR Feeder 3B - parallel feeder to 3A, served by T4 substation
   parameter Real Zpu_T4 = 0.067 "T4 transformer impedance, 6.7%";
   parameter Real T4_VABase = 18e6 "T4 nameplate VA at standard rating (18/26.88 MVA OA/FA, OA used)";
   parameter Real E_HSS_3B_ref_kWh = 1967459.95 "Validation reference for HSS_3B annual kWh (placeholder = HUB 3A value, replace when 3B meter data available)";
-  // ============================================================
+  
   // Source: T4 secondary 12.5 kV bus
-  // ------------------------------------------------------------
   // T4 is the Riverside Utility Co substation transformer for 3B,
   // 18/26.88 MVA OA/FA, 66kV -> 12.5kV, Z=6.7%. Modeled as an ideal
   // grid source at the secondary bus (same approach as 3A's T3).
-  // ============================================================
+  
   Buildings.Electrical.AC.ThreePhasesBalanced.Sources.Grid grid(f = f, V = V_MV, phiSou = 0) "T4 12.5 kV bus" annotation(
     Placement(transformation(extent = {{-248, -8}, {-232, 8}})));
-  // ============================================================
+  
   // Primary feeder nodes
-  // ============================================================
   Buildings.Electrical.AC.ThreePhasesBalanced.Interfaces.Terminal_n n_3B "Switchboard / breaker 3B node" annotation(
     Placement(transformation(extent = {{-218, -8}, {-202, 8}})));
   Buildings.Electrical.AC.ThreePhasesBalanced.Interfaces.Terminal_n n_V3_3B "V3_3B node (HSS_3B)" annotation(
@@ -39,9 +35,8 @@ model Circuit_3B "UCR Feeder 3B - parallel feeder to 3A, served by T4 substation
     Placement(transformation(extent = {{-148, -8}, {-132, 8}})));
   Buildings.Electrical.AC.ThreePhasesBalanced.Interfaces.Terminal_n n_V5_3B "V5_3B node (Humanities_3B 4.16 kV branch... 208/120 in spec; treating as direct 12.5/208)" annotation(
     Placement(transformation(extent = {{-148, -118}, {-132, -102}})));
-  // ============================================================
+
   // Branch transformers (12.5 kV -> LV)
-  // ============================================================
   Buildings.Electrical.AC.ThreePhasesBalanced.Conversion.ACACTransformer x_HSS_3B(VHigh = V_MV, VLow = V_480, VABase = 1500e3, XoverR = 8, Zperc = 0.0575) "HSS_3B 1500 kVA, 12.5kV -> 480V" annotation(
     Placement(transformation(extent = {{-108, 92}, {-92, 108}})));
   Buildings.Electrical.AC.ThreePhasesBalanced.Conversion.ACACTransformer x_UniversityBookStore(VHigh = V_MV, VLow = V_208, VABase = 300e3, XoverR = 6, Zperc = 0.0575) "University Bookstore 300 kVA, 12.5kV -> 208/120V" annotation(
@@ -52,12 +47,12 @@ model Circuit_3B "UCR Feeder 3B - parallel feeder to 3A, served by T4 substation
     Placement(transformation(extent = {{-108, -28}, {-92, -12}})));
   Buildings.Electrical.AC.ThreePhasesBalanced.Conversion.ACACTransformer x_Humanities_3B(VHigh = V_MV, VLow = V_208, VABase = 500e3, XoverR = 6, Zperc = 0.0575) "Humanities (3B) 500 kVA, 12.5kV -> 208/120V dry" annotation(
     Placement(transformation(extent = {{-108, -118}, {-92, -102}})));
-  // ============================================================
-  // Loads -- all un-metered for 3B baseline (no per-building meter
+  
+  // Loads 
+  // all un-metered for 3B baseline (no per-building meter
   // data was supplied; HSS_3B is treated as un-metered with a
   // placeholder LF until metered data is available, even though
   // the validation reference is exposed as if it were metered).
-  // ============================================================
   Buildings.Electrical.AC.ThreePhasesBalanced.Loads.Inductive l_HSS_3B(pf = PF, mode = Buildings.Electrical.Types.Load.FixedZ_steady_state, P_nominal = -1500e3*LF_HSS_3B*PF, V_nominal = V_480) "HSS_3B" annotation(
     Placement(transformation(extent = {{-38, 92}, {-22, 108}})));
   Buildings.Electrical.AC.ThreePhasesBalanced.Loads.Inductive l_UniversityBookStore(pf = PF, mode = Buildings.Electrical.Types.Load.FixedZ_steady_state, P_nominal = -300e3*LF_Bookstore*PF, V_nominal = V_208) "University Bookstore" annotation(
@@ -68,16 +63,14 @@ model Circuit_3B "UCR Feeder 3B - parallel feeder to 3A, served by T4 substation
     Placement(transformation(extent = {{-38, -28}, {-22, -12}})));
   Buildings.Electrical.AC.ThreePhasesBalanced.Loads.Inductive l_Humanities_3B(pf = PF, mode = Buildings.Electrical.Types.Load.FixedZ_steady_state, P_nominal = -500e3*LF_Humanities_3B*PF, V_nominal = V_208) "Humanities Building (3B)" annotation(
     Placement(transformation(extent = {{-38, -118}, {-22, -102}})));
-  // ============================================================
+  
   // Validation: cumulative kWh
-  // ============================================================
   Modelica.Blocks.Continuous.Integrator E_HSS_3B(k = 1/3.6e6) "HSS_3B cum kWh" annotation(
     Placement(transformation(extent = {{220, 80}, {236, 96}})));
   Modelica.Blocks.Continuous.Integrator E_3B(k = 1/3.6e6) "Feeder 3B cum kWh" annotation(
     Placement(transformation(extent = {{220, 50}, {236, 66}})));
-  // ============================================================
-  // Reported outputs (parallel naming to 3A)
-  // ============================================================
+  
+  // Reported outputs (same naming to 3A)
   Modelica.Blocks.Interfaces.RealOutput P_total_kW "kW supplied by 3B from T4" annotation(
     Placement(transformation(extent = {{272, -10}, {288, 6}}), iconTransformation(extent = {{272, -10}, {288, 6}})));
   Modelica.Blocks.Interfaces.RealOutput Q_total_kvar "kvar on 3B" annotation(
@@ -89,8 +82,8 @@ model Circuit_3B "UCR Feeder 3B - parallel feeder to 3A, served by T4 substation
   Modelica.Blocks.Interfaces.RealOutput err_HSS_3B_pct "(simulated - reference)/reference * 100 for HSS_3B" annotation(
     Placement(transformation(extent = {{272, -113}, {288, -97}}), iconTransformation(extent = {{272, -113}, {288, -97}})));
 equation
-// ============================================================
-// 3B primary topology: 3B breaker feeds three children
+  
+// 3B breaker feeds three children
 //   V3_3B -> HSS_3B
 //   V4_3B -> Bookstore, Arts(3B), Materials
 //   V5_3B -> Humanities(3B)
@@ -103,9 +96,8 @@ equation
     Line(points = {{-210, 0}, {-140, 0}}, color = {0, 120, 0}, thickness = 0.5));
   connect(n_3B, n_V5_3B) annotation(
     Line(points = {{-210, 0}, {-180, 0}, {-180, -110}, {-146, -110}}, color = {0, 120, 0}, thickness = 0.5));
-// ============================================================
+  
 // Transformer primary attachments
-// ============================================================
   connect(n_V3_3B, x_HSS_3B.terminal_n) annotation(
     Line(points = {{-146, 100}, {-96, 100}}, color = {0, 120, 0}, thickness = 0.5));
   connect(n_V4_3B, x_UniversityBookStore.terminal_n) annotation(
@@ -116,9 +108,8 @@ equation
     Line(points = {{-140, 0}, {-140, -20}, {-96, -20}}, color = {0, 120, 0}, thickness = 0.5));
   connect(n_V5_3B, x_Humanities_3B.terminal_n) annotation(
     Line(points = {{-146, -110}, {-96, -110}}, color = {0, 120, 0}, thickness = 0.5));
-// ============================================================
+  
 // Transformer secondary -> load attachments
-// ============================================================
   connect(x_HSS_3B.terminal_p, l_HSS_3B.terminal) annotation(
     Line(points = {{-92, 100}, {-38, 100}}, color = {0, 120, 0}, thickness = 0.5));
   connect(x_UniversityBookStore.terminal_p, l_UniversityBookStore.terminal) annotation(
@@ -129,14 +120,13 @@ equation
     Line(points = {{-92, -20}, {-38, -20}}, color = {0, 120, 0}, thickness = 0.5));
   connect(x_Humanities_3B.terminal_p, l_Humanities_3B.terminal) annotation(
     Line(points = {{-92, -110}, {-38, -110}}, color = {0, 120, 0}, thickness = 0.5));
-// ============================================================
+  
 // Aggregate diagnostics (positive = supplied)
-// ============================================================
   P_total_kW = -(l_HSS_3B.P + l_UniversityBookStore.P + l_ArtsBuilding_3B.P + l_MaterialsBuilding.P + l_Humanities_3B.P)/1000;
   Q_total_kvar = P_total_kW*QoverP;
   S_total_kVA = sqrt(P_total_kW^2 + Q_total_kvar^2);
   Loading_T4_pct = 100*S_total_kVA/(T4_VABase/1000);
-// ---- Energy integrators ----
+//  Energy integrators 
   E_HSS_3B.u = -l_HSS_3B.P;
   E_3B.u = P_total_kW*1000;
   err_HSS_3B_pct = 100*(E_HSS_3B.y - E_HSS_3B_ref_kWh)/E_HSS_3B_ref_kWh;
