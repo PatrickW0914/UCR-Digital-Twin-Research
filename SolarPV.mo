@@ -2,11 +2,8 @@ within ThreeAModel;
 
 block SolarPV
   "Rooftop solar PV with diurnal generation profile (UCR ~33.97N latitude)"
-  // ------------------------------------------------------------
-  // Same model as Feeder 3B work: bell-curve irradiance peaking
-  // at solar noon (12:30 PST), efficiency * performance ratio
-  // applied to nameplate. Outputs P_solar in W (positive).
-  // ------------------------------------------------------------
+  // peaking at solar noon (12:30 PST), efficiency * performance ratio
+  // Outputs P_solar in W (positive).
   parameter Real P_rated = 500e3
     "Rated PV nameplate capacity (W)";
   parameter Real panel_efficiency = 0.20
